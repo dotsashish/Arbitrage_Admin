@@ -1,0 +1,1 @@
+export {Platform as Platform} from './Platform';

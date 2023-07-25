@@ -1,0 +1,1 @@
+export {TermsConditions as TermsConditions} from './TermsConditions';
