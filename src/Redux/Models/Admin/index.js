@@ -59,6 +59,8 @@ const obj = {
     addCurrency:(data)=>store.dispatch(ACTIONS.addCurrency(data)),
     deleteCurrencyById:(id)=>store.dispatch(ACTIONS.deleteCurrencyById(id)),
     updateCurrency:(data)=>store.dispatch(ACTIONS.updateCurrency(data)),
+
+    tradeFeeLog:(data)=>store.dispatch(ACTIONS.tradeFeeLog(data)),
     
     
 }

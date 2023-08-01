@@ -68,7 +68,7 @@ function Currency(props) {
       return;
     } else {
       setError("");
-      try {debugger
+      try {
         props.application.setLoading(true);
         if(id === "")
         {

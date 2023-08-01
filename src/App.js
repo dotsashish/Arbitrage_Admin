@@ -27,7 +27,7 @@ import Error from './Components/Error/Error';
 
 function App() {
   return (
-    <BrowserRouter> 
+    <BrowserRouter basename='/admin'> 
      <ToastContainer />
       <Loader />
       <Routes>

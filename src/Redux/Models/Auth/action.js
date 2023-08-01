@@ -5,7 +5,7 @@ import { JWT } from '../../../Components/Shared';
 export const login = (data) => async (dispatch) => {
   try {
     const response = await AuthService.Login(data);
-    debugger
+    
     if (response.success) {
       dispatch({ type: LOGIN_SUCCESS, payload: response.token });
       JWT.setJwt(response.token);

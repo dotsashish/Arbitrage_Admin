@@ -1,5 +1,5 @@
-import Viddly from "./Viddly.json"
+import Arbitrage from "./Arbitrage.json"
 
 export {
-    Viddly
+    Arbitrage
 }

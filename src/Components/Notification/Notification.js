@@ -144,7 +144,7 @@ function Notification(props) {
     }
   };
 
-  const handleEdit = async (id) => {debugger
+  const handleEdit = async (id) => {
     try {
       props.application.setLoading(true);
       const res = await props.admin.getNotificationById(id);

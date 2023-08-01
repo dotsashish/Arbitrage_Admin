@@ -1104,7 +1104,7 @@ export const getCurrencyById = (id) => async (dispatch, getState) => {
 
 export const addCurrency = (data) => async(dispatch, getState) => {
   try
-  {debugger
+  {
       const accessToken = getState().auth.accessToken;
       const response = await axios.post(`${process.env.REACT_APP_API_ENDPOINT}/currencyCreate/`,data,
       {
@@ -1177,5 +1177,33 @@ export const deleteCurrencyById = (id) => async (dispatch, getState) => {
   }
 };
 //End
+
+// API for lof Trade fee update
+export const tradeFeeLog = (data) => async(dispatch, getState) => {
+  try
+  {
+      const accessToken = getState().auth.accessToken;
+      const response = await axios.post(`${process.env.REACT_APP_API_ENDPOINT}/tradeFeeLog/`,data,
+      {
+          headers:
+          {
+              "Content-Type": "application/json", 
+              "Authorization": `Bearer ${accessToken}` 
+          } 
+      });
+     if(response && response.status === 200 && response.data) {
+         return response;
+     } 
+     else 
+     {
+          dispatch({type:CONSTANTS.PRIVACY_FAILLED, payload:null});
+          return Promise.reject(new Error(response.message)); 
+     }
+
+  } catch(error) {
+      console.log(error);
+  }
+}
+//END
 
 

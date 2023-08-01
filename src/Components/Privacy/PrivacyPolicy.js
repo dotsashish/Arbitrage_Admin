@@ -108,19 +108,19 @@ function PrivacyPolicy(props) {
             name: name.trim(),
             description: detail.trim()
           };
-          const responce = await props.admin.addPrivacyPolicy(data);
-          if(responce.data.message === 'success'){
-            props.application.setLoading(false);
-            toast.success("Privacy Policy added successfully!", {
-              position: toast.POSITION.TOP_CENTER,
-            });
-          }
-          else {
-            toast.error("Something went wrong!", {
-              position: toast.POSITION.TOP_CENTER,
-            });
-            props.application.setLoading(false);
-          }
+            const responce = await props.admin.addPrivacyPolicy(data);
+            if(responce.data.message === 'success'){
+              props.application.setLoading(false);
+              toast.success("Privacy Policy added successfully!", {
+                position: toast.POSITION.TOP_CENTER,
+              });
+            }
+            else {
+              toast.error("Something went wrong!", {
+                position: toast.POSITION.TOP_CENTER,
+              });
+              props.application.setLoading(false);
+            }
         }
         else {
           const data = {

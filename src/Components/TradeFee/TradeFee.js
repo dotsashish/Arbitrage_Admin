@@ -2,14 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import { ethers } from 'ethers';
-import * as CONTRACTS from '../../Contract';
+import * as CONTRACTS from "../../Contract"
 import Web3Modal from 'web3modal';
 import Web3 from 'web3';
 import { injectModels } from "../../Redux/injectModels";
 import { routes } from "../../Constants/routes";
 import { Link } from "react-router-dom";
-
-
 
 //import WalletConnectProvider from '@walletconnect/web3-provider';
 //import { walletconnect } from 'web3modal/dist/providers/connectors';
@@ -19,12 +17,12 @@ function TradeFee(props) {
   const [showModal, setShowModal] = useState(false);
   const [error, setError] = useState('');
   const [fee, setFee] = useState('');
-  const [price, setPrice] = useState(0);
+  const [tradeFee, setTradeFee] = useState(0);
 
   const handleClose = () => setShowModal(false);
   const handleShow = () => setShowModal(true);
 
-  const address = process.env.REACT_APP_TOKEN_ADDRESS;
+  const address = process.env.REACT_APP_CONTRACT_ADDRESS;
   const BLOCKCHAIN_NETWORK = process.env.REACT_APP_BLOCKCHAIN_NETWORK;
   const BLOCKCHAIN_ID = process.env.REACT_APP_BLOCKCHAIN_ID;
   const ownerAddress = process.env.REACT_APP_OWNER_ADDRESS;
@@ -34,6 +32,27 @@ function TradeFee(props) {
     onAccountChange();
     getBNBBalance();
   }, []);
+
+  const fetchTransactionFee = async () => {
+    try {
+      props.application.setLoading(true);
+      const provider =
+        window.ethereum && window.ethereum.isMetaMask ? window.ethereum : new Web3.providers.HttpProvider(BLOCKCHAIN_NETWORK);
+      const web3 = new Web3(provider);
+      const contract = new web3.eth.Contract(CONTRACTS.Arbitrage.abi, address);
+      const receipt = await contract.methods.getTradeFee().call();
+      const fee = ethers.utils.formatUnits(receipt, 'ether');
+      setTradeFee(fee);
+      // setTradeFee(parseFloat(fee));
+      props.application.setLoading(false);
+    } catch (error) {
+      console.error(error);
+      props.application.setLoading(false);
+      toast.error('Something went wrong!', {
+        position: toast.POSITION.TOP_CENTER,
+      });
+    }
+  };
 
   const onAccountChange = () => {
     if (window.ethereum !== undefined) {
@@ -65,26 +84,6 @@ function TradeFee(props) {
     }
   };
 
-  const fetchTransactionFee = async () => {
-    try {
-      props.application.setLoading(true);
-      const provider =
-        window.ethereum && window.ethereum.isMetaMask ? window.ethereum : new Web3.providers.HttpProvider(BLOCKCHAIN_NETWORK);
-      const web3 = new Web3(provider);
-      const contract = new web3.eth.Contract(CONTRACTS.Viddly.abi, address);
-      const receipt = await contract.methods.getJoinFee().call();
-      const price = ethers.utils.formatUnits(receipt, 'ether');
-      setPrice(parseFloat(price));
-      props.application.setLoading(false);
-    } catch (error) {
-      console.error(error);
-      props.application.setLoading(false);
-      toast.error('Something went wrong!', {
-        position: toast.POSITION.TOP_CENTER,
-      });
-    }
-  };
-
   const handleFee = (e) => {
     e.preventDefault();
     const val = e.target.value.replace(/[^\d.]/g, '');
@@ -100,11 +99,7 @@ function TradeFee(props) {
     handleShow();
   }
 
- 
-
-
-
-  const handleSubmit = async (e) => {debugger
+  const handleSubmit = async (e) => {
     e.preventDefault();
     let valid = true;
     if (fee === '') {
@@ -132,9 +127,15 @@ function TradeFee(props) {
           const web3ModalProvider = new ethers.providers.Web3Provider(web3ModalInstance);
           const signer = web3ModalProvider.getSigner();
           const bnbPrice = Web3.utils.toWei(fee, 'ether');
-          const dotContract = new ethers.Contract(address, CONTRACTS.Viddly.abi, signer);
-          const transaction = await dotContract.setJoinFee(bnbPrice);
+          const dotContract = new ethers.Contract(address, CONTRACTS.Arbitrage.abi, signer);
+          const transaction = await dotContract.setTradeFee(bnbPrice);
           await transaction.wait();
+        
+          const data = {
+            fee: fee.trim()
+          };
+          //const responce = await props.admin.tradeFeeLog(data);
+
           toast.success('Trade fee updated successfully!', {
             position: toast.POSITION.TOP_CENTER,
           });
@@ -153,8 +154,6 @@ function TradeFee(props) {
         //   }
         // };
        // const projectId = '2599217e88bbbd704416ab788b59a9b2'
-
-       
 
         // const web3Modal = new Web3Modal({
         //   network: `${process.env.REACT_APP_BLOCKCHAIN_NETWORK}`,
@@ -217,7 +216,7 @@ function TradeFee(props) {
         <tbody>
           <tr>
             <td>1</td>
-            <td>{price}</td>
+            <td>{tradeFee}</td>
             <td><a className="btn btn-primary mr-3 fee-button" onClick={handleEdit}>Edit</a></td>
           </tr>
         </tbody>
@@ -267,7 +266,7 @@ function TradeFee(props) {
         Save Changes
       </Button>
     </Modal.Footer> */}
-  </Modal>
+      </Modal>
 </React.Fragment>
 );
 }

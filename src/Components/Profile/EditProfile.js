@@ -206,7 +206,7 @@ function EditProfile(props) {
           </nav>
         </div>
         <div className="icon-menu">
-          <Link className="fa fa-arrow-left" aria-hidden="true" onClick={redirectProfileHandle}> </Link> <span>Back</span>
+          <Link className="fa fa-arrow-left" aria-hidden="true" onClick={redirectProfileHandle}> <span>Back</span></Link> 
         </div>
       </div>
 
